@@ -185,3 +185,272 @@ document.addEventListener("DOMContentLoaded", () => {
         barElement.style.width = `${count}%`;
     }, 40);
 });
+const ring = document.querySelector(".ring");
+
+let isDown = false;
+
+let startX;
+
+let rotateY = 0;
+
+ring.addEventListener("mousedown",(e)=>{
+
+isDown=true;
+
+startX=e.clientX;
+
+ring.style.animation="none";
+
+});
+
+window.addEventListener("mouseup",()=>{
+
+isDown=false;
+
+});
+
+window.addEventListener("mousemove",(e)=>{
+
+if(!isDown)return;
+
+let walk=e.clientX-startX;
+
+rotateY+=walk*0.3;
+
+ring.style.transform=`rotateY(${rotateY}deg)`;
+
+startX=e.clientX;
+
+});
+
+/* ==========================================
+   5. STAR FIELD BACKGROUND
+   ========================================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const hero = document.querySelector(".hero-section");
+
+    // Membuat container jika belum ada
+    let starsContainer = document.getElementById("stars");
+
+    if (!starsContainer) {
+        starsContainer = document.createElement("div");
+        starsContainer.id = "stars";
+        hero.prepend(starsContainer);
+    }
+
+    const totalStars = 700;
+
+    for (let i = 0; i < totalStars; i++) {
+
+        const star = document.createElement("span");
+        star.classList.add("star");
+
+        // ukuran acak
+        const size = Math.random() * 2.5 + 0.5;
+
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+
+        // posisi acak
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+
+        // opacity acak
+        star.style.opacity = Math.random();
+
+        // animasi berbeda-beda
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.style.animationDuration = `${2 + Math.random() * 6}s`;
+
+        // glow beberapa bintang
+        if (Math.random() > 0.94) {
+            star.style.boxShadow = "0 0 10px white";
+            star.style.width = "3px";
+            star.style.height = "3px";
+        }
+
+        starsContainer.appendChild(star);
+    }
+
+});
+
+/* ===================================
+   GALAXY PREMIUM
+=================================== */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+const space=document.getElementById("space");
+
+// ===================
+// STARS
+// ===================
+
+for(let i=0;i<800;i++){
+
+    const star=document.createElement("div");
+
+    star.className="star";
+
+    const size=Math.random()*2+0.5;
+
+    star.style.width=size+"px";
+    star.style.height=size+"px";
+
+    star.style.left=Math.random()*100+"%";
+    star.style.top=Math.random()*100+"%";
+
+    star.style.opacity=Math.random();
+
+    star.style.animationDuration=
+    (2+Math.random()*6)+"s";
+
+    star.style.animationDelay=
+    Math.random()*6+"s";
+
+    if(Math.random()>0.98){
+
+        star.style.boxShadow="0 0 12px white";
+
+        star.style.width="3px";
+        star.style.height="3px";
+
+    }
+
+    space.appendChild(star);
+
+}
+
+// ===================
+// SHOOTING STARS
+// ===================
+
+function createMeteor(){
+
+    const meteor=document.createElement("div");
+
+    meteor.className="meteor";
+
+    meteor.style.left=Math.random()*window.innerWidth+"px";
+
+    meteor.style.top=Math.random()*300+"px";
+
+    meteor.style.animationDuration=
+    (2+Math.random()*2)+"s";
+
+    space.appendChild(meteor);
+
+    setTimeout(()=>{
+
+        meteor.remove();
+
+    },4000);
+
+}
+
+setInterval(createMeteor,1200);
+
+});
+
+/* =====================================================
+   FUTURISTIC CURSOR SYSTEM
+   ===================================================== */
+
+const cursor = document.querySelector(".cursor");
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+let cursorX = mouseX;
+let cursorY = mouseY;
+
+
+/* =====================================================
+   MOUSE POSITION
+   ===================================================== */
+
+document.addEventListener("mousemove", (e) => {
+
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+
+});
+
+
+/* =====================================================
+   SMOOTH CURSOR
+   ===================================================== */
+
+function animateCursor() {
+
+    cursorX += (mouseX - cursorX) * 0.18;
+    cursorY += (mouseY - cursorY) * 0.18;
+
+    cursor.style.left = cursorX + "px";
+    cursor.style.top = cursorY + "px";
+
+    requestAnimationFrame(animateCursor);
+
+}
+
+animateCursor();
+
+
+/* =====================================================
+   HOVER ELEMENT
+   ===================================================== */
+
+const hoverElements = document.querySelectorAll(
+    "a, button, .project-card, .gallery-item, input, textarea, .nav-link"
+);
+
+
+hoverElements.forEach((element) => {
+
+    element.addEventListener("mouseenter", () => {
+
+        cursor.classList.add("hover");
+
+        const text =
+            element.dataset.cursor ||
+            (
+                element.tagName === "A"
+                ? "OPEN"
+                : "VIEW"
+            );
+
+        document.querySelector(".cursor-label").textContent = text;
+
+    });
+
+
+    element.addEventListener("mouseleave", () => {
+
+        cursor.classList.remove("hover");
+
+        document.querySelector(".cursor-label").textContent =
+            "EXPLORE";
+
+    });
+
+});
+
+
+/* =====================================================
+   CLICK ANIMATION
+   ===================================================== */
+
+document.addEventListener("mousedown", () => {
+
+    cursor.classList.add("click");
+
+});
+
+
+document.addEventListener("mouseup", () => {
+
+    cursor.classList.remove("click");
+
+});
