@@ -1101,3 +1101,421 @@ body.loading {
     }
 }
 
+/* ==========================================
+   STAR FIELD
+   ========================================== */
+
+#stars{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    z-index:0;
+    pointer-events:none;
+}
+
+.star{
+    position:absolute;
+    background:#fff;
+    border-radius:50%;
+    animation:twinkle linear infinite;
+}
+
+@keyframes twinkle{
+
+    0%,100%{
+        opacity:.2;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:1;
+        transform:scale(1.8);
+    }
+
+}
+
+#stars{
+    z-index:0;
+}
+
+.cyber-object{
+    z-index:1;
+}
+
+.hero-container{
+    z-index:2;
+    position:relative;
+}
+/* ===============================
+   GALAXY BACKGROUND
+================================== */
+
+#space{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:0;
+}
+
+.star{
+    position:absolute;
+    background:white;
+    border-radius:50%;
+    animation:twinkle linear infinite;
+}
+
+@keyframes twinkle{
+
+    0%,100%{
+        opacity:.15;
+        transform:scale(1);
+    }
+
+    50%{
+        opacity:1;
+        transform:scale(1.8);
+    }
+
+}
+
+/* ===============================
+   METEOR
+================================== */
+
+.meteor {
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(white, transparent);
+    transform: rotate(45deg);
+    animation: meteorFall 5s linear infinite;
+}
+
+@keyframes meteorFall {
+    0% {
+        transform: translate(0, 0) rotate(45deg);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-500px, 500px) rotate(45deg);
+        opacity: 0;
+    }
+}
+
+.hero-section{
+
+    position:relative;
+    overflow:hidden;
+
+}
+
+#space{
+
+    z-index:0;
+
+}
+
+.cyber-object{
+
+    z-index:2;
+
+}
+
+.hero-container{
+
+    position:relative;
+    z-index:3;
+
+}
+
+/* =====================================================
+   FUTURISTIC CUSTOM CURSOR
+   ===================================================== */
+
+* {
+    cursor: none !important;
+}
+
+/* MAIN CURSOR */
+
+.cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 80px;
+    height: 80px;
+
+    pointer-events: none;
+    z-index: 999999;
+
+    transform: translate(-50%, -50%);
+
+    mix-blend-mode: difference;
+}
+
+/* CORE */
+
+.cursor-core {
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background: #fff;
+
+    border-radius: 50%;
+
+    box-shadow:
+        0 0 5px #fff,
+        0 0 15px rgba(255,255,255,.9),
+        0 0 30px rgba(255,255,255,.5);
+
+    transition: 
+        width .3s ease,
+        height .3s ease;
+}
+
+
+/* OUTER RING */
+
+.cursor-ring {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255,255,255,.7);
+}
+
+
+/* RING 1 */
+
+.cursor-ring-1 {
+    width: 42px;
+    height: 42px;
+
+    animation: cursorRotate 8s linear infinite;
+}
+
+
+/* RING 2 */
+
+.cursor-ring-2 {
+    width: 62px;
+    height: 62px;
+
+    border: 1px dashed rgba(255,255,255,.35);
+
+    animation: cursorRotateReverse 12s linear infinite;
+}
+
+
+/* ROTATION */
+
+@keyframes cursorRotate {
+
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+
+}
+
+
+@keyframes cursorRotateReverse {
+
+    from {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+}
+
+
+/* CROSSHAIR */
+
+.cursor-cross {
+    position: absolute;
+
+    background: rgba(255,255,255,.65);
+}
+
+
+/* HORIZONTAL */
+
+.cursor-cross.horizontal {
+    width: 75px;
+    height: 1px;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+
+/* VERTICAL */
+
+.cursor-cross.vertical {
+    width: 1px;
+    height: 75px;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+
+/* LABEL */
+
+.cursor-label {
+
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%) scale(.7);
+
+    font-family: Arial, sans-serif;
+
+    font-size: 7px;
+
+    letter-spacing: 2px;
+
+    color: #fff;
+
+    opacity: 0;
+
+    white-space: nowrap;
+
+    transition:
+        opacity .3s ease,
+        transform .3s ease;
+}
+
+
+/* =====================================================
+   HOVER MODE
+   ===================================================== */
+
+.cursor.hover .cursor-ring-1 {
+
+    width: 75px;
+    height: 75px;
+
+    border-color: #fff;
+
+}
+
+
+.cursor.hover .cursor-ring-2 {
+
+    width: 100px;
+    height: 100px;
+
+    border-color: rgba(255,255,255,.6);
+
+}
+
+
+.cursor.hover .cursor-core {
+
+    width: 12px;
+    height: 12px;
+
+}
+
+
+.cursor.hover .cursor-label {
+
+    opacity: 1;
+
+    transform:
+        translate(-50%, -50%)
+        scale(1);
+
+}
+
+
+/* HIDE CROSSHAIR WHEN HOVER */
+
+.cursor.hover .cursor-cross {
+
+    opacity: .15;
+
+}
+
+
+/* =====================================================
+   CLICK EFFECT
+   ===================================================== */
+
+.cursor.click .cursor-ring-1 {
+
+    width: 100px;
+    height: 100px;
+
+}
+
+
+.cursor.click .cursor-ring-2 {
+
+    width: 130px;
+    height: 130px;
+
+}
+
+
+.cursor.click .cursor-core {
+
+    width: 18px;
+    height: 18px;
+
+}
+
+
+/* =====================================================
+   TEXT SELECTION
+   ===================================================== */
+
+::selection {
+    background: #fff;
+    color: #000;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+    * {
+        cursor: auto !important;
+    }
+
+    .cursor {
+        display: none;
+    }
+
+}
