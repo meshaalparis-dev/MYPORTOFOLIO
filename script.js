@@ -454,3 +454,268 @@ document.addEventListener("mouseup", () => {
     cursor.classList.remove("click");
 
 });
+
+// SECTION SCHOOL HISTORY
+const schoolItems = document.querySelectorAll('.school-item');
+const schoolObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+        }
+    });
+}, { threshold: 0.25 });
+
+schoolItems.forEach(item => schoolObserver.observe(item));
+
+const breakTexts = document.querySelectorAll('.break-text');
+
+breakTexts.forEach(text => {
+    text.addEventListener('click', () => {
+        text.classList.remove('burst');
+        void text.offsetWidth;
+        text.classList.add('burst');
+    });
+});
+
+schoolItems.forEach(item => {
+    item.addEventListener('click', () => {
+        item.classList.remove('burst');
+        void item.offsetWidth;
+        item.classList.add('burst');
+    });
+});
+const gameStage = document.getElementById('gameStage');
+const startBtn = document.getElementById('startBtn');
+const pauseBtn = document.getElementById('pauseBtn');
+const restartBtn = document.getElementById('restartBtn');
+const gameOverScreen = document.getElementById('gameOverScreen');
+const finalText = document.getElementById('finalText');
+const reticle = document.getElementById('reticle');
+const scoreEl = document.getElementById('score');
+const livesEl = document.getElementById('lives');
+const levelEl = document.getElementById('level');
+const timerEl = document.getElementById('timer');
+
+let score = 0;
+let lives = 3;
+let level = 1;
+let timeLeft = 60;
+let gameRunning = false;
+let gamePaused = false;
+let spawnInterval = null;
+let timerInterval = null;
+let bossSpawned = false;
+
+const shootSound = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_5b7a4d7f9d.mp3?filename=laser-weapon-144677.mp3');
+const boomSound = new Audio('https://cdn.pixabay.com/download/audio/2022/03/15/audio_4d9e4c8f5c.mp3?filename=explosion-6055.mp3');
+
+shootSound.volume = 0.25;
+boomSound.volume = 0.25;
+
+function updateHUD() {
+    scoreEl.textContent = score;
+    livesEl.textContent = lives;
+    levelEl.textContent = level;
+    timerEl.textContent = timeLeft;
+}
+
+function randomPos(el, size = 90) {
+    const rect = gameStage.getBoundingClientRect();
+    const maxX = rect.width - size;
+    const maxY = rect.height - size;
+    el.style.left = `${Math.random() * maxX}px`;
+    el.style.top = `${Math.random() * maxY}px`;
+}
+
+function playShoot() {
+    shootSound.currentTime = 0;
+    shootSound.play().catch(() => {});
+}
+
+function playBoom() {
+    boomSound.currentTime = 0;
+    boomSound.play().catch(() => {});
+}
+
+function moveReticle(e) {
+    const rect = gameStage.getBoundingClientRect();
+    reticle.style.left = `${e.clientX - rect.left}px`;
+    reticle.style.top = `${e.clientY - rect.top}px`;
+}
+
+function createFlash(x, y) {
+    const flash = document.createElement('div');
+    flash.className = 'flash';
+    flash.style.left = `${x}px`;
+    flash.style.top = `${y}px`;
+    gameStage.appendChild(flash);
+    setTimeout(() => flash.remove(), 350);
+}
+
+function spawnAlien() {
+    if (!gameRunning || gamePaused) return;
+
+    const alien = document.createElement('div');
+    alien.className = `alien ${Math.random() > 0.35 ? 'good' : 'bad'}`;
+    alien.textContent = alien.classList.contains('good') ? '👽' : '🪨';
+    randomPos(alien);
+
+    gameStage.appendChild(alien);
+
+    const lifeTime = Math.max(1600 - (level * 90), 700);
+    const disappear = setTimeout(() => {
+        if (alien.isConnected && gameRunning && !gamePaused) {
+            alien.remove();
+            if (alien.classList.contains('good')) {
+                lives -= 1;
+                updateHUD();
+                if (lives <= 0) endGame();
+            }
+        }
+    }, lifeTime);
+
+    alien.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!gameRunning || gamePaused) return;
+
+        playShoot();
+        clearTimeout(disappear);
+
+        if (alien.classList.contains('good')) {
+            score += 10;
+        } else {
+            score += 5;
+        }
+
+        if (level >= 5 && !bossSpawned && score >= 120) {
+            spawnBoss();
+        }
+
+        const rect = gameStage.getBoundingClientRect();
+        createFlash(e.clientX - rect.left, e.clientY - rect.top);
+
+        alien.classList.add('hit');
+        playBoom();
+        updateHUD();
+
+        setTimeout(() => alien.remove(), 320);
+
+        if (score > 0 && score % 50 === 0) {
+            level += 1;
+            updateHUD();
+        }
+    });
+}
+
+function spawnBoss() {
+    bossSpawned = true;
+
+    const boss = document.createElement('div');
+    boss.className = 'boss-alien';
+    boss.textContent = '👾';
+    boss.style.left = '50%';
+    boss.style.top = '40%';
+    boss.style.transform = 'translateX(-50%)';
+    boss.dataset.hp = '8';
+
+    gameStage.appendChild(boss);
+
+    boss.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!gameRunning || gamePaused) return;
+
+        playShoot();
+        playBoom();
+
+        let hp = parseInt(boss.dataset.hp, 10);
+        hp -= 1;
+        boss.dataset.hp = hp;
+
+        const rect = gameStage.getBoundingClientRect();
+        createFlash(e.clientX - rect.left, e.clientY - rect.top);
+
+        score += 25;
+        updateHUD();
+
+        if (hp <= 0) {
+            boss.classList.add('hit');
+            setTimeout(() => boss.remove(), 350);
+            level += 1;
+            score += 100;
+            updateHUD();
+        }
+    });
+}
+
+function startGame() {
+    if (gameRunning) return;
+
+    gameRunning = true;
+    gamePaused = false;
+    bossSpawned = false;
+    score = 0;
+    lives = 3;
+    level = 1;
+    timeLeft = 60;
+    updateHUD();
+    gameOverScreen.classList.remove('show');
+    startBtn.style.display = 'none';
+    pauseBtn.textContent = 'PAUSE';
+
+    spawnInterval = setInterval(spawnAlien, 850);
+    timerInterval = setInterval(() => {
+        if (!gamePaused) {
+            timeLeft -= 1;
+            updateHUD();
+            if (timeLeft <= 0) endGame();
+        }
+    }, 1000);
+}
+
+function togglePause() {
+    if (!gameRunning) return;
+    gamePaused = !gamePaused;
+    pauseBtn.textContent = gamePaused ? 'RESUME' : 'PAUSE';
+}
+
+function endGame() {
+    gameRunning = false;
+    gamePaused = false;
+    clearInterval(spawnInterval);
+    clearInterval(timerInterval);
+
+    document.querySelectorAll('.alien, .boss-alien').forEach(a => a.remove());
+
+    finalText.textContent = `Skor kamu: ${score}`;
+    gameOverScreen.classList.add('show');
+    startBtn.textContent = 'RESTART GAME';
+    startBtn.style.display = 'block';
+    pauseBtn.textContent = 'PAUSE';
+}
+
+startBtn.addEventListener('click', startGame);
+pauseBtn.addEventListener('click', togglePause);
+restartBtn.addEventListener('click', () => {
+    gameOverScreen.classList.remove('show');
+    startGame();
+});
+
+gameStage.addEventListener('mousemove', moveReticle);
+
+gameStage.addEventListener('click', (e) => {
+    if (!gameRunning || gamePaused) return;
+    const rect = gameStage.getBoundingClientRect();
+    createFlash(e.clientX - rect.left, e.clientY - rect.top);
+});
+
+updateHUD();
+// SECTION 10: CLOSING / OUTRO
+const breakOutro = document.querySelectorAll('.break-outro');
+
+breakOutro.forEach(item => {
+    item.addEventListener('click', () => {
+        item.classList.remove('burst');
+        void item.offsetWidth;
+        item.classList.add('burst');
+    });
+}); 
