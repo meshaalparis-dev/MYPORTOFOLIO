@@ -2447,3 +2447,134 @@ body.loading {
         padding: 12px 16px;
     }
 }
+/* ==========================================
+   RESPONSIVE DESIGN (MEDIA QUERIES)
+   ========================================== */
+
+/* 1. LAYAR TABLET / HP BESAR (Maksimal 1024px) */
+@media screen and (max-width: 1024px) {
+    /* About Section */
+    .about-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .left-col, .right-col {
+        width: 100%;
+    }
+
+    /* Bento Grid (RPL & DKV) */
+    .bento-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* Maksimal 2 kolom */
+    }
+
+    .bento-card.span-2 {
+        grid-column: span 2;
+    }
+}
+
+/* 2. LAYAR HP / MOBILE (Maksimal 768px) */
+@media screen and (max-width: 768px) {
+    /* Sembunyikan custom cursor di layar sentuh (HP) agar tidak mengganggu */
+    .cursor {
+        display: none !important;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        padding: 40px 20px;
+    }
+
+    .big-title {
+        font-size: 2rem; /* Memperkecil ukuran teks judul agar tidak overflow */
+    }
+
+    /* About Section */
+    .main-title {
+        font-size: 2.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr; /* Stat card menumpuk ke bawah */
+        gap: 15px;
+    }
+
+    /* Bento Grid (RPL & DKV) -> 1 Kolom Penuh */
+    .bento-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .bento-card.span-2 {
+        grid-column: span 1;
+    }
+
+    /* Stacked Cards (My Hobby) */
+    .cards-stack-container {
+        padding: 0 10px;
+    }
+
+    .stack-card .card-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .card-image img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* School History Section */
+    .school-title {
+        font-size: 2.2rem;
+    }
+
+    .school-item {
+        padding: 15px;
+    }
+
+    /* Arcade Game Section */
+    .hud {
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .hud-box {
+        min-width: 70px;
+        padding: 5px 10px;
+    }
+
+    .game-stage {
+        height: 350px; /* Menyesuaikan tinggi layar game di HP */
+    }
+
+    /* Outro Section */
+    .closing-title {
+        font-size: 3rem;
+    }
+
+    .closing-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+}
+
+/* 3. LAYAR HP KECIL (Maksimal 480px) */
+@media screen and (max-width: 480px) {
+    .big-title {
+        font-size: 1.5rem;
+    }
+
+    .main-title {
+        font-size: 2rem;
+    }
+
+    .gallery-title {
+        font-size: 1.8rem;
+    }
+
+    .project-card {
+        width: 240px; /* Menyesuaikan ukuran kartu galeri marquee */
+    }
+}
